@@ -56,7 +56,48 @@
             box-sizing: border-box;
             border-right: 1px solid var(--border-color);
             box-shadow: none;
-            transition: all 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+        }
+
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .menu-toggle {
+            position: fixed;
+            top: 40px;
+            left: 220px;
+            z-index: 1000;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s ease, background 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            color: var(--text-muted);
+        }
+
+        .menu-toggle.collapsed {
+            left: 20px;
+        }
+
+        .menu-toggle .toggle-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .menu-toggle.collapsed .toggle-icon {
+            transform: scaleX(-1);
+        }
+
+        .menu-toggle:hover {
+            background: #f3f4f6;
+            color: var(--accent-color);
         }
 
         .sidebar h1 {
@@ -108,6 +149,11 @@
             margin-left: 240px;
             padding: 60px 80px;
             flex: 1;
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-content.collapsed {
+            margin-left: 0;
         }
 
         .section-title {
@@ -922,7 +968,13 @@
 </head>
 <body>
 
-    <nav class="sidebar">
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Menu">
+        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="toggle-icon">
+            <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+    </button>
+
+    <nav class="sidebar" id="sidebar">
         <h1>PORTFOLIO</h1>
         <ul class="nav-links">
             <li><a href="#works" class="active">Works</a></li>
@@ -1224,6 +1276,19 @@
     </div>
 
     <script>
+        // 侧边栏折叠/展开功能
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        if (menuToggle && sidebar && mainContent) {
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                menuToggle.classList.toggle('collapsed');
+                mainContent.classList.toggle('collapsed');
+            });
+        }
+
         // 导航切换功能
         const navLinks = document.querySelectorAll('.nav-links a');
         const worksDiv = document.querySelector('div#works');
